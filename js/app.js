@@ -9,14 +9,27 @@ var app;
       },
 
       increment: function() {
-         this.set('countervalue',this.get('countervalue') + 1);
+         this.save({countervalue: this.get('countervalue') + 1});
       },
 
       decrement: function() {
-         this.set('countervalue',this.get('countervalue') - 1);
+         this.save({countervalue: this.get('countervalue') - 1});
       }
 
   });
+
+  var Counters = Backbone.Collection.extend({
+     
+     model: Counter,
+
+     localStorage: new Backbone.LocalStorage('counters'),
+
+     initialize: function() {
+        this.fetch();
+     }
+  });
+
+  var theCounters = new Counters();
 
   var CounterView = Backbone.View.extend({
 
@@ -43,7 +56,14 @@ var app;
     },
 
     initialize: function() {
-      this.counterview = new CounterView({ model: new Counter() });
+	  var currentCounter;
+	  if(theCounters.size() > 0)
+		currentCounter = theCounters.last();
+	  else {
+	    currentCounter = new Counter();
+	    theCounters.push(currentCounter);
+	  }
+      this.counterview = new CounterView({ model: currentCounter });
     },
 
     render: function() {
