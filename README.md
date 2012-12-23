@@ -1,4 +1,4 @@
 BackboneCounter
 ===============
 
-Test project playing with Backbone
+Playing with Backbone: a Counter webapp, Seaside-style

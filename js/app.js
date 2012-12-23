@@ -1,4 +1,4 @@
-var app = app || {};
+var app;
 	
 (function(){
 
@@ -9,11 +9,11 @@ var app = app || {};
       },
 
       increment: function() {
-         this.countervalue += 1;
+         this.set('countervalue',this.get('countervalue') + 1);
       },
 
       decrement: function() {
-         this.countervalue -= 1;
+         this.set('countervalue',this.get('countervalue') - 1);
       }
 
   });
@@ -21,6 +21,10 @@ var app = app || {};
   var CounterView = Backbone.View.extend({
 
     tagName: 'h1',
+
+    initialize: function() {
+      this.model.on( 'change', this.render, this );
+    },
 
     render: function() {
       this.$el.html(this.model.get('countervalue'));
@@ -32,15 +36,27 @@ var app = app || {};
   var AppView = Backbone.View.extend({
 
     el: '#backbonecounter',
-    counterview: new CounterView({model: new Counter()}),
 
-    //initialize: function() {
-      //counterview = new CounterView({ model: Counter });
-    //},
+    events:{
+	    "click .plus" : "plus",
+	    "click .min" : "min"
+    },
+
+    initialize: function() {
+      this.counterview = new CounterView({ model: new Counter() });
+    },
 
     render: function() {
       this.$el.prepend(this.counterview.render().el);
       return this;
+    },
+
+    plus: function() {
+	  this.counterview.model.increment();
+    },
+
+    min: function() {
+	  this.counterview.model.decrement();
     }
 	
   })
