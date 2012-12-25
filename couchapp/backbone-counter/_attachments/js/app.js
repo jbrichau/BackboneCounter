@@ -12,12 +12,16 @@ Backbone.couch_connector.config.global_changes = false;
         countervalue: 0
       },
 
+      initialize: function() {
+	     _.bindAll(this);
+      },
+
       increment: function() {
-         this.save({countervalue: this.get('countervalue') + 1});
+         this.set({countervalue: this.get('countervalue') + 1});
       },
 
       decrement: function() {
-         this.save({countervalue: this.get('countervalue') - 1});
+         this.set({countervalue: this.get('countervalue') - 1});
       }
 
   });
@@ -26,7 +30,7 @@ Backbone.couch_connector.config.global_changes = false;
      
      model: Counter,
 
-     url : "/counters",
+     url : "counters",
 
      initialize: function() {
         this.fetch();
