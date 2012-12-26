@@ -59,10 +59,8 @@ var app;
 	  var currentCounter;
 	  if(theCounters.size() > 0)
 		currentCounter = theCounters.last();
-	  else {
-	    currentCounter = new Counter();
-	    theCounters.push(currentCounter);
-	  }
+	  else
+	    currentCounter = theCounters.create({});
       this.counterview = new CounterView({ model: currentCounter });
     },
 
