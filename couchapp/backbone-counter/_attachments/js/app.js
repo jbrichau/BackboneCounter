@@ -3,7 +3,7 @@ var app;
 Backbone.couch_connector.config.db_name = "backbone-counter";
 Backbone.couch_connector.config.ddoc_name = "backbone-counter";
 Backbone.couch_connector.config.global_changes = false;
-	
+
 (function(){
 
   var Counter = Backbone.Model.extend({
@@ -12,16 +12,18 @@ Backbone.couch_connector.config.global_changes = false;
         countervalue: 0
       },
 
+      //urlRoot: 'counters',
+
       initialize: function() {
 	     _.bindAll(this);
       },
 
       increment: function() {
-         this.set({countervalue: this.get('countervalue') + 1});
+         this.save({countervalue: this.get('countervalue') + 1});
       },
 
       decrement: function() {
-         this.set({countervalue: this.get('countervalue') - 1});
+         this.save({countervalue: this.get('countervalue') - 1});
       }
 
   });
@@ -32,9 +34,10 @@ Backbone.couch_connector.config.global_changes = false;
 
      url : "counters",
 
-     initialize: function() {
-        this.fetch();
-     }
+//     initialize: function() {
+//		this.fetch();
+//     }
+
   });
 
   var theCounters = new Counters();
@@ -67,10 +70,8 @@ Backbone.couch_connector.config.global_changes = false;
 	  var currentCounter;
 	  if(theCounters.size() > 0)
 		currentCounter = theCounters.last();
-	  else {
-	    currentCounter = new Counter();
-	    theCounters.push(currentCounter);
-	  }
+	  else
+	    currentCounter = theCounters.create({});
       this.counterview = new CounterView({ model: currentCounter });
     },
 
@@ -90,6 +91,7 @@ Backbone.couch_connector.config.global_changes = false;
   })
 
   // Kick things off by creating the **App**.
-  $(function(){ app = new AppView().render()});
+  $(function(){ 
+	theCounters.fetch({success: function(){app = new AppView().render()}})});
 }());
 
